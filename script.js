@@ -1,142 +1,90 @@
-// ==========================
 
-// Product Data
+/* =====================================
+   ShopEasy - E-commerce Website
+===================================== */
 
-// ==========================
-
+// 1. Product Data
 const products = [
-
-{
-
-id:1,
-
-name:"Wireless Headphones",
-
-price:1999,
-
-category:"Electronics",
-
-image:"https://picsum.photos/300/220?random=1"
-
-},
-
-{
-
-id:2,
-
-name:"Smart Watch",
-
-price:2499,
-
-category:"Electronics",
-
-image:"https://picsum.photos/300/220?random=2"
-
-},
-
-{
-
-id:3,
-
-name:"Men T-Shirt",
-
-price:699,
-
-category:"Fashion",
-
-image:"https://picsum.photos/300/220?random=3"
-
-},
-
-{
-
-id:4,
-
-name:"Women Dress",
-
-price:1299,
-
-category:"Fashion",
-
-image:"https://picsum.photos/300/220?random=4"
-
-},
-
-{
-
-id:5,
-
-name:"Running Shoes",
-
-price:1899,
-
-category:"Shoes",
-
-image:"https://picsum.photos/300/220?random=5"
-
-},
-
-{
-
-id:6,
-
-name:"Sneakers",
-
-price:1599,
-
-category:"Shoes",
-
-image:"https://picsum.photos/300/220?random=6"
-
-},
-
-{
-
-id:7,
-
-name:"Bluetooth Speaker",
-
-price:999,
-
-category:"Electronics",
-
-image:"https://picsum.photos/300/220?random=7"
-
-},
-
-{
-
-id:8,
-
-name:"Jeans",
-
-price:1199,
-
-category:"Fashion",
-
-image:"https://picsum.photos/300/220?random=8"
-
-}
-
+    {
+        id: 1,
+        name: "Wireless Headphones",
+        price: 1499,
+        category: "Electronics",
+        image: "https://picsum.photos/seed/headphones/400/300"
+    },
+    {
+        id: 2,
+        name: "Smart Watch",
+        price: 2499,
+        category: "Electronics",
+        image: "https://picsum.photos/seed/smartwatch/400/300"
+    },
+    {
+        id: 3,
+        name: "Bluetooth Speaker",
+        price: 999,
+        category: "Electronics",
+        image: "https://picsum.photos/seed/speaker/400/300"
+    },
+    {
+        id: 4,
+        name: "Casual T-Shirt",
+        price: 599,
+        category: "Fashion",
+        image: "https://picsum.photos/seed/tshirt/400/300"
+    },
+    {
+        id: 5,
+        name: "Stylish Jacket",
+        price: 1999,
+        category: "Fashion",
+        image: "https://picsum.photos/seed/jacket/400/300"
+    },
+    {
+        id: 6,
+        name: "Running Shoes",
+        price: 1799,
+        category: "Shoes",
+        image: "https://picsum.photos/seed/runningshoes/400/300"
+    },
+    {
+        id: 7,
+        name: "Casual Sneakers",
+        price: 1299,
+        category: "Shoes",
+        image: "https://picsum.photos/seed/sneakers/400/300"
+    },
+    {
+        id: 8,
+        name: "Denim Jeans",
+        price: 1099,
+        category: "Fashion",
+        image: "https://picsum.photos/seed/jeans/400/300"
+    }
 ];
 
-// ==========================
 
-// Variables
+// 2. HTML Elements
+const productContainer = document.getElementById("products");
+const cartItems = document.getElementById("cart-items");
+const cartCount = document.getElementById("cart-count");
+const totalElement = document.getElementById("total");
 
-// ==========================
+const search = document.getElementById("search");
+const category = document.getElementById("category");
+const sort = document.getElementById("sort");
 
-// Variables
 
-
+// 3. Load Cart from Local Storage
 let cart = [];
 
 try {
-    const savedCart = localStorage.getItem("shopEasyCart");
-    const parsedCart = savedCart ? JSON.parse(savedCart) : [];
+    const savedCart = JSON.parse(
+        localStorage.getItem("shopEasyCart") || "[]"
+    );
 
-    if (Array.isArray(parsedCart)) {
-        cart = parsedCart
+    if (Array.isArray(savedCart)) {
+        cart = savedCart
             .filter(item =>
                 item &&
                 Number.isInteger(item.id) &&
@@ -158,164 +106,199 @@ try {
 } catch (error) {
     cart = [];
 }
-const productContainer = document.getElementById("products");
-
-const cartItems = document.getElementById("cart-items");
-
-const total = document.getElementById("total");
-
-const cartCount = document.getElementById("cart-count");
-
-const search = document.getElementById("search");
-
-const category = document.getElementById("category");
-const sort = document.getElementById("sort");
-
-// ==========================
-
-// Display Products
-
-// ==========================
 
 
+// 4. Display Products
 function displayProducts(productList) {
     productContainer.innerHTML = "";
 
-    // Check if no products match
     if (productList.length === 0) {
         productContainer.innerHTML = `
             <div class="no-products">
                 <h3>No Products Found!</h3>
-                <p>Try searching with another name or category.</p>
+                <p>Try another product name or category.</p>
             </div>
         `;
         return;
     }
 
-    // Display matching products
     productList.forEach(product => {
         productContainer.innerHTML += `
             <div class="card">
-                <img src="${product.image}" alt="${product.name}">
+                <img
+                    src="${product.image}"
+                    alt="${product.name}"
+                    loading="lazy"
+                >
+
                 <div class="card-content">
                     <h3>${product.name}</h3>
-                    <p>${product.category}</p>
+
                     <p class="price">₹${product.price}</p>
-                    
-            <div class="product-buttons">
-                    <button onclick="viewDetails(${product.id})">
-                    View Details
-                    </button>
 
-                    <button onclick="addToCart(${product.id})">
-                    Add To Cart
-                    </button>
-            </div>
+                    <p>Category: ${product.category}</p>
 
+                    <div class="product-buttons">
+                        <button
+                            onclick="viewDetails(${product.id})"
+                        >
+                            View Details
+                        </button>
+
+                        <button
+                            onclick="addToCart(${product.id})"
+                        >
+                            Add To Cart
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
     });
 }
-displayProducts(products);
 
-// ==========================
 
-// Add To Cart
+// 5. Search, Category Filter and Price Sorting
+function filterProducts() {
+    const searchText = search.value.toLowerCase().trim();
+    const selectedCategory = category.value;
+    const sortValue = sort.value;
 
-// ==========================
+    let filteredProducts = products.filter(product => {
+        const matchesName = product.name
+            .toLowerCase()
+            .includes(searchText);
 
-function addToCart(id){
+        const matchesCategory =
+            selectedCategory === "All" ||
+            product.category === selectedCategory;
 
-const item = cart.find(product=>product.id===id);
+        return matchesName && matchesCategory;
+    });
 
-if(item){
+    if (sortValue === "low-high") {
+        filteredProducts.sort((a, b) => a.price - b.price);
+    } else if (sortValue === "high-low") {
+        filteredProducts.sort((a, b) => b.price - a.price);
+    }
 
-item.quantity++;
-
+    displayProducts(filteredProducts);
 }
 
-else{
-
-const product = products.find(product=>product.id===id);
-
-cart.push({
-
-...product,
-
-quantity:1
-
-});
-
-}
-
-updateCart();
-
-}
-
-// ==========================
-
-// Update Cart
-
-// ==========================
-
-function updateCart(){
-
-cartItems.innerHTML="";
-
-let grandTotal=0;
-
-let totalItem=0;
-
-if(cart.length===0){
-
-cartItems.innerHTML="<p>Your Cart is Empty.</p>";
-
-}
-
-cart.forEach(item=>{
-
-grandTotal += item.price*item.quantity;
-
-totalItem += item.quantity;
-
-cartItems.innerHTML += `
-
-<div class="cart-item"><div><h4>${item.name}</h4><p>₹${item.price}</p></div><div class="quantity"><button onclick="decrease(${item.id})">-</button>
-
-<span>${item.quantity}</span>
-
-<button onclick="increase(${item.id})">+</button>
-
-</div><button onclick="removeItem(${item.id})">Remove
-
-</button></div>`;
-
-});
-
-total.innerText = grandTotal;
-cartCount.innerText = totalItem;
-
-localStorage.setItem("shopEasyCart", JSON.stringify(cart));
-}
-
-// ==========================
-
-// Increase
-
-// ==========================
+search.addEventListener("input", filterProducts);
+category.addEventListener("change", filterProducts);
+sort.addEventListener("change", filterProducts);
 
 
-function increase(id) {
-    const item = cart.find(product => product.id === id);
+// 6. Add Product to Cart
+function addToCart(id) {
+    const product = products.find(item => item.id === id);
 
-    if (!item) return;
+    if (!product) return;
 
-    item.quantity++;
+    const existingItem = cart.find(item => item.id === id);
+
+    if (existingItem) {
+        existingItem.quantity++;
+    } else {
+        cart.push({
+            ...product,
+            quantity: 1
+        });
+    }
+
     updateCart();
 }
 
-function decrease(id) {
+
+// 7. Display Actual Cart Products
+function updateCart() {
+    cartItems.innerHTML = "";
+
+    let total = 0;
+    let itemCount = 0;
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <p class="empty-cart">Your cart is empty!</p>
+        `;
+    } else {
+        cart.forEach(item => {
+            const subtotal = item.price * item.quantity;
+
+            total += subtotal;
+            itemCount += item.quantity;
+
+            cartItems.innerHTML += `
+                <div class="cart-item">
+                    <img
+                        src="${item.image}"
+                        alt="${item.name}"
+                        loading="lazy"
+                    >
+
+                    <div class="cart-item-details">
+                        <h4>${item.name}</h4>
+
+                        <p>Price: ₹${item.price}</p>
+
+                        <p>Quantity: ${item.quantity}</p>
+
+                        <p>
+                            Subtotal: ₹${subtotal}
+                        </p>
+
+                        <div class="cart-item-buttons">
+                            <button
+                                onclick="decreaseQuantity(${item.id})"
+                                aria-label="Decrease quantity"
+                            >
+                                −
+                            </button>
+
+                            <button
+                                onclick="increaseQuantity(${item.id})"
+                                aria-label="Increase quantity"
+                            >
+                                +
+                            </button>
+
+                            <button
+                                onclick="removeFromCart(${item.id})"
+                            >
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    cartCount.textContent = itemCount;
+    totalElement.textContent = total;
+
+    // Save cart so it survives page refreshes
+    localStorage.setItem(
+        "shopEasyCart",
+        JSON.stringify(cart)
+    );
+}
+
+
+// 8. Increase Product Quantity
+function increaseQuantity(id) {
+    const item = cart.find(product => product.id === id);
+
+    if (item) {
+        item.quantity++;
+        updateCart();
+    }
+}
+
+
+// 9. Decrease Product Quantity
+function decreaseQuantity(id) {
     const item = cart.find(product => product.id === id);
 
     if (!item) return;
@@ -329,62 +312,40 @@ function decrease(id) {
     updateCart();
 }
 
-// ==========================
 
-// Remove
-
-// ==========================
-
-function removeItem(id){
-
-cart = cart.filter(product=>product.id!==id);
-
-updateCart();
-
+// 10. Remove Product from Cart
+function removeFromCart(id) {
+    cart = cart.filter(product => product.id !== id);
+    updateCart();
 }
 
-function filterProducts() {
-    const text = search.value.toLowerCase().trim();
-    const selectedCategory = category.value;
-    const sortValue = sort.value;
 
-    // Filter products by name and category
-    let result = products.filter(product => {
-        const matchesName =
-            product.name.toLowerCase().includes(text);
-
-        const matchesCategory =
-            selectedCategory === "All" ||
-            product.category === selectedCategory;
-
-        return matchesName && matchesCategory;
-    });
-
-    // Sort the filtered products by price
-    if (sortValue === "low-high") {
-        result.sort((a, b) => a.price - b.price);
-    } else if (sortValue === "high-low") {
-        result.sort((a, b) => b.price - a.price);
-    }
-
-    // Display the final result
-    displayProducts(result);
-}
-
-search.addEventListener("input", filterProducts);
-category.addEventListener("change", filterProducts);
-sort.addEventListener("change", filterProducts);
-updateCart();
+// 11. View Product Details Popup
 function viewDetails(id) {
     const product = products.find(item => item.id === id);
 
     if (!product) return;
 
+    const modal = document.getElementById("product-modal");
+
+    if (!modal) {
+        alert(
+            product.name +
+            "\nCategory: " + product.category +
+            "\nPrice: ₹" + product.price
+        );
+        return;
+    }
+
     document.getElementById("modal-image").src = product.image;
     document.getElementById("modal-image").alt = product.name;
-    document.getElementById("modal-name").textContent = product.name;
+
+    document.getElementById("modal-name").textContent =
+        product.name;
+
     document.getElementById("modal-category").textContent =
         "Category: " + product.category;
+
     document.getElementById("modal-price").textContent =
         "₹" + product.price;
 
@@ -393,14 +354,32 @@ function viewDetails(id) {
         closeDetails();
     };
 
-    document.getElementById("product-modal").style.display = "flex";
+    modal.style.display = "flex";
 }
 
+
+// 12. Close Product Details Popup
 function closeDetails() {
-    document.getElementById("product-modal").style.display = "none";
+    const modal = document.getElementById("product-modal");
+
+    if (modal) {
+        modal.style.display = "none";
+    }
 }
-// ==========================
 
-// Search
 
-// ==========================
+// Close popup when clicking outside it
+const productModal = document.getElementById("product-modal");
+
+if (productModal) {
+    productModal.addEventListener("click", function (event) {
+        if (event.target === productModal) {
+            closeDetails();
+        }
+    });
+}
+
+
+// 13. Initial Page Setup
+displayProducts(products);
+updateCart();
