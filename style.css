@@ -365,3 +365,34 @@ width:100%;
 .no-products p {
     font-size: 15px;
 }
+
+/* Product Action Buttons */
+
+.product-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.product-buttons button {
+    flex: 1;
+    padding: 10px 6px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.product-buttons button:first-child {
+    background: #e8efff;
+    color: #2874f0;
+}
+
+.product-buttons button:last-child {
+    background: #2874f0;
+    color: white;
+}
+
+.product-buttons button:hover {
+    opacity: 0.85;
+}
