@@ -139,6 +139,7 @@ const cartCount = document.getElementById("cart-count");
 const search = document.getElementById("search");
 
 const category = document.getElementById("category");
+const sort = document.getElementById("sort");
 
 // ==========================
 
@@ -312,18 +313,13 @@ updateCart();
 
 }
 
-// ==========================
-
-// Search
-
-// ==========================
-
-
 function filterProducts() {
     const text = search.value.toLowerCase().trim();
     const selectedCategory = category.value;
+    const sortValue = sort.value;
 
-    const result = products.filter(product => {
+    // Filter products by name and category
+    let result = products.filter(product => {
         const matchesName =
             product.name.toLowerCase().includes(text);
 
@@ -334,8 +330,23 @@ function filterProducts() {
         return matchesName && matchesCategory;
     });
 
+    // Sort the filtered products by price
+    if (sortValue === "low-high") {
+        result.sort((a, b) => a.price - b.price);
+    } else if (sortValue === "high-low") {
+        result.sort((a, b) => b.price - a.price);
+    }
+
+    // Display the final result
     displayProducts(result);
 }
 
 search.addEventListener("input", filterProducts);
 category.addEventListener("change", filterProducts);
+sort.addEventListener("change", filterProducts);
+
+// ==========================
+
+// Search
+
+// ==========================
