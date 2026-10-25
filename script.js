@@ -146,22 +146,38 @@ const category = document.getElementById("category");
 
 // ==========================
 
-function displayProducts(productList){
 
-productContainer.innerHTML="";
+function displayProducts(productList) {
+    productContainer.innerHTML = "";
 
-productList.forEach(product=>{
+    // Check if no products match
+    if (productList.length === 0) {
+        productContainer.innerHTML = `
+            <div class="no-products">
+                <h3>No Products Found!</h3>
+                <p>Try searching with another name or category.</p>
+            </div>
+        `;
+        return;
+    }
 
-productContainer.innerHTML += `
-
-<div class="card"><img src="${product.image}"><div class="card-content"><h3>${product.name}</h3><p>${product.category}</p><p class="price">₹${product.price}</p><button onclick="addToCart(${product.id})">Add To Cart
-
-</button></div></div>`;
-
-});
-
+    // Display matching products
+    productList.forEach(product => {
+        productContainer.innerHTML += `
+            <div class="card">
+                <img src="${product.image}" alt="${product.name}">
+                <div class="card-content">
+                    <h3>${product.name}</h3>
+                    <p>${product.category}</p>
+                    <p class="price">₹${product.price}</p>
+                    <button onclick="addToCart(${product.id})">
+                        Add To Cart
+                    </button>
+                </div>
+            </div>
+        `;
+    });
 }
-
 displayProducts(products);
 
 // ==========================
