@@ -302,44 +302,24 @@ updateCart();
 
 // ==========================
 
-search.addEventListener("keyup",()=>{
 
-const text = search.value.toLowerCase();
+function filterProducts() {
+    const text = search.value.toLowerCase().trim();
+    const selectedCategory = category.value;
 
-const result = products.filter(product=>{
+    const result = products.filter(product => {
+        const matchesName =
+            product.name.toLowerCase().includes(text);
 
-return product.name.toLowerCase().includes(text);
+        const matchesCategory =
+            selectedCategory === "All" ||
+            product.category === selectedCategory;
 
-});
+        return matchesName && matchesCategory;
+    });
 
-displayProducts(result);
-
-});
-
-// ==========================
-
-// Category Filter
-
-// ==========================
-
-category.addEventListener("change",()=>{
-
-if(category.value==="All"){
-
-displayProducts(products);
-
+    displayProducts(result);
 }
 
-else{
-
-const result = products.filter(product=>{
-
-return product.category===category.value;
-
-});
-
-displayProducts(result);
-
-}
-
-});
+search.addEventListener("input", filterProducts);
+category.addEventListener("change", filterProducts);
