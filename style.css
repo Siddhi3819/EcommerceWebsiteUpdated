@@ -345,5 +345,23 @@ flex-direction:column;
 width:100%;
 
 }
+}
 
+/* No Products Found */
+
+.no-products {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    color: #555;
+}
+
+.no-products h3 {
+    color: #2874f0;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.no-products p {
+    font-size: 15px;
 }
