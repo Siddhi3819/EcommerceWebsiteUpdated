@@ -126,8 +126,38 @@ image:"https://picsum.photos/300/220?random=8"
 
 // ==========================
 
+// Variables
+
+
 let cart = [];
 
+try {
+    const savedCart = localStorage.getItem("shopEasyCart");
+    const parsedCart = savedCart ? JSON.parse(savedCart) : [];
+
+    if (Array.isArray(parsedCart)) {
+        cart = parsedCart
+            .filter(item =>
+                item &&
+                Number.isInteger(item.id) &&
+                Number.isInteger(item.quantity) &&
+                item.quantity > 0 &&
+                products.some(product => product.id === item.id)
+            )
+            .map(item => {
+                const product = products.find(
+                    product => product.id === item.id
+                );
+
+                return {
+                    ...product,
+                    quantity: item.quantity
+                };
+            });
+    }
+} catch (error) {
+    cart = [];
+}
 const productContainer = document.getElementById("products");
 
 const cartItems = document.getElementById("cart-items");
@@ -255,10 +285,10 @@ cartItems.innerHTML += `
 
 });
 
-total.innerText=grandTotal;
+total.innerText = grandTotal;
+cartCount.innerText = totalItem;
 
-cartCount.innerText=totalItem;
-
+localStorage.setItem("shopEasyCart", JSON.stringify(cart));
 }
 
 // ==========================
@@ -267,36 +297,28 @@ cartCount.innerText=totalItem;
 
 // ==========================
 
-function increase(id){
 
-const item = cart.find(product=>product.id===id);
+function increase(id) {
+    const item = cart.find(product => product.id === id);
 
-item.quantity++;
+    if (!item) return;
 
-updateCart();
-
+    item.quantity++;
+    updateCart();
 }
 
-// ==========================
+function decrease(id) {
+    const item = cart.find(product => product.id === id);
 
-// Decrease
+    if (!item) return;
 
-// ==========================
+    item.quantity--;
 
-function decrease(id){
+    if (item.quantity <= 0) {
+        cart = cart.filter(product => product.id !== id);
+    }
 
-const item = cart.find(product=>product.id===id);
-
-item.quantity--;
-
-if(item.quantity===0){
-
-cart = cart.filter(product=>product.id!==id);
-
-}
-
-updateCart();
-
+    updateCart();
 }
 
 // ==========================
@@ -344,6 +366,7 @@ function filterProducts() {
 search.addEventListener("input", filterProducts);
 category.addEventListener("change", filterProducts);
 sort.addEventListener("change", filterProducts);
+updateCart();
 
 // ==========================
 
