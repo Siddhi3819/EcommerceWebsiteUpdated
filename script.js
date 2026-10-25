@@ -201,9 +201,17 @@ function displayProducts(productList) {
                     <h3>${product.name}</h3>
                     <p>${product.category}</p>
                     <p class="price">₹${product.price}</p>
-                    <button onclick="addToCart(${product.id})">
-                        Add To Cart
+                    
+            <div class="product-buttons">
+                    <button onclick="viewDetails(${product.id})">
+                    View Details
                     </button>
+
+                    <button onclick="addToCart(${product.id})">
+                    Add To Cart
+                    </button>
+            </div>
+
                 </div>
             </div>
         `;
