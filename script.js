@@ -375,7 +375,30 @@ search.addEventListener("input", filterProducts);
 category.addEventListener("change", filterProducts);
 sort.addEventListener("change", filterProducts);
 updateCart();
+function viewDetails(id) {
+    const product = products.find(item => item.id === id);
 
+    if (!product) return;
+
+    document.getElementById("modal-image").src = product.image;
+    document.getElementById("modal-image").alt = product.name;
+    document.getElementById("modal-name").textContent = product.name;
+    document.getElementById("modal-category").textContent =
+        "Category: " + product.category;
+    document.getElementById("modal-price").textContent =
+        "₹" + product.price;
+
+    document.getElementById("modal-add-cart").onclick = function () {
+        addToCart(product.id);
+        closeDetails();
+    };
+
+    document.getElementById("product-modal").style.display = "flex";
+}
+
+function closeDetails() {
+    document.getElementById("product-modal").style.display = "none";
+}
 // ==========================
 
 // Search
